@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050914">
+<title>GJ Entregas — Protótipo interativo</title>
+<style>
+:root{--bg:#050914;--panel:#07162c;--line:#173b69;--blue:#087bff;--bright:#55aaff;--text:#fff;--muted:#9db6d8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#0c2040,#050914 48%);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;padding:18px}
+.app{max-width:480px;margin:auto;border:1px solid #164e91;border-radius:22px;padding:14px;background:#050914;box-shadow:0 18px 60px #0008}
+.brand{display:flex;align-items:center;gap:12px;padding:8px 4px 16px}.logo{height:54px;width:58px;border:1px solid var(--blue);border-radius:13px;background:#071b3a;display:grid;place-items:center;color:var(--bright);font-size:27px}.brand h1{font-size:22px;margin:0;letter-spacing:.3px}.brand h1 span{color:#168bff}.tag{font-size:10px;letter-spacing:1px;color:#8cbaff;margin-top:3px}.menu{margin-left:auto;border:1px solid var(--line);background:#0b1930;color:var(--bright);border-radius:10px;padding:10px;font-size:18px}
+nav{display:none;background:#0b1930;border:1px solid var(--line);border-radius:12px;padding:7px;margin-bottom:12px}nav.open{display:block}nav button{width:100%;text-align:left;background:transparent;border:0;color:white;padding:12px;border-radius:8px}
+.panel{background:#07162c;border:1px solid #153963;border-radius:17px;padding:20px 16px;min-height:350px}.hero{text-align:center;padding:12px 0 20px}.heroicon{width:68px;height:68px;border:1px solid var(--blue);background:#092956;border-radius:50%;display:grid;place-items:center;font-size:30px;margin:0 auto 12px}.hero h2{font-size:22px;margin:0 0 7px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.line{border:0;border-top:1px solid #173b69;margin:15px 0}label{display:block;color:#c8dfff;font-size:13px;margin-bottom:8px}input[type=number]{width:100%;padding:14px;border:1px solid #245184;background:#081328;color:white;border-radius:10px;font-size:16px;outline:none}input:focus{border-color:#168bff;box-shadow:0 0 0 2px #087bff33}.sectionlabel{font-size:12px;color:#66aaff;font-weight:700;letter-spacing:.7px;margin:20px 0 12px}.check{display:flex;align-items:center;gap:11px;padding:13px 0;color:#fff;font-size:14px}.check input{accent-color:#168bff;width:18px;height:18px}.check+.check{border-top:1px solid #17304f}.btn{width:100%;border:1px solid var(--blue);background:linear-gradient(100deg,#087bff,#0058d8);color:white;border-radius:10px;padding:14px;font-weight:700;font-size:14px;cursor:pointer;margin-top:14px}.btn.secondary{background:transparent;color:#b8d7ff;border-color:#245184}.fine{font-size:11px;color:#6f8baa;text-align:center;margin-top:13px}.resultbox{background:#092958;border:1px solid var(--blue);border-radius:13px;padding:18px;margin:18px 0}.resultbox .overline{text-align:center;color:#8dbdff;font-size:11px;letter-spacing:1px}.resultbox h2{text-align:center;font-size:28px;margin:8px 0}.resultbox p{color:#b6cbe5;font-size:13px;margin:8px 0 0}.notice{background:#101e33;border:1px solid #23446a;border-radius:11px;padding:14px;margin-top:14px}.notice strong{display:block;margin:7px 0}.notice p{color:var(--muted);font-size:13px;line-height:1.5;margin:0}.historyitem{background:#0c203b;border-radius:10px;padding:13px;margin-top:10px}.historyitem strong{display:block;margin-bottom:5px}.bottom{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}.bottom button{background:transparent;color:#7895b8;border:1px solid transparent;border-radius:10px;padding:11px 4px;font-size:12px;cursor:pointer}.bottom button.active{background:#092956;color:#55aaff;border-color:#164e91}.bottom span{display:block;font-size:18px;margin-bottom:3px}.footer{text-align:center;color:#57799e;font-size:10px;letter-spacing:1px;margin:17px 0 5px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="brand">
+    <div class="logo" aria-hidden="true">🚚</div>
+    <div><h1>GJ <span>ENTREGAS</span></h1><div class="tag">ENTREGAS RÁPIDAS E SEGURAS</div></div>
+    <button class="menu" id="menuBtn" aria-label="Abrir menu">☰</button>
+  </header>
+  <nav id="menu">
+    <button data-screen="home">▦ &nbsp; Calculadora de frete</button>
+    <button data-screen="history">◷ &nbsp; Histórico</button>
+    <button data-screen="about">ⓘ &nbsp; Sobre o aplicativo</button>
+  </nav>
+  <main class="panel" id="content"></main>
+  <div class="bottom">
+    <button data-screen="home" class="active"><span>▦</span>Calcular</button>
+    <button data-screen="history"><span>◷</span>Histórico</button>
+    <button data-screen="about"><span>ⓘ</span>Sobre</button>
+  </div>
+  <div class="footer">GJ ENTREGAS · CONCEITO DE INTERFACE 01</div>
+</div>
+<script>
+const content=document.getElementById('content'),menu=document.getElementById('menu');
+let screen='home',historyItems=[];
+function render(){
+ document.querySelectorAll('.bottom button').forEach(b=>b.classList.toggle('active',b.dataset.screen===screen));
+ if(screen==='home'){
+ content.innerHTML=`<div class="hero"><div class="heroicon">🏍️</div><h2>Calculadora de Frete</h2><div class="muted">Informe a distância e os itens adicionais para simular o frete.</div></div><hr class="line"><form id="calcForm"><label for="km">Distância em quilômetros</label><input id="km" name="km" type="number" min="0" max="100000" step="any" placeholder="Ex.: 15" required><div class="sectionlabel">ADICIONAIS DA ENTREGA</div><label class="check"><input type="checkbox" id="nota"> Possui nota fiscal</label><label class="check"><input type="checkbox" id="peso"> Carga acima de 10 kg</label><label class="check"><input type="checkbox" id="grande"> Item de grande porte</label><button class="btn" type="submit">▦ &nbsp; Calcular frete</button></form><div class="fine">Tarifas configuradas conforme as regras informadas pela GJ Entregas.</div>`;
+ document.getElementById('calcForm').addEventListener('submit',e=>{e.preventDefault();const k=Number(document.getElementById('km').value);if(!Number.isFinite(k)||k<=0||k>100000)return;const nota=document.getElementById('nota').checked,peso=document.getElementById('peso').checked,grande=document.getElementById('grande').checked;const base=k<=5?25:(k<=15?30:30+2*(k-15));const adicionalNota=nota?5:0,adicionalPeso=peso?0.30*k:0,adicionalGrande=grande?0.20*k:0;const total=base+adicionalNota+adicionalPeso+adicionalGrande;const opts=[];if(nota)opts.push('Nota fiscal (+ R$ 5,00)');if(peso)opts.push('Carga acima de 10 kg (+ R$ 0,30/km)');if(grande)opts.push('Item de grande porte (+ R$ 0,20/km)');session={km:k,options:opts.join(', ')||'Nenhum adicional',base,adicionalNota,adicionalPeso,adicionalGrande,total};screen='result';render()});
+ }else if(screen==='result'){
+ const s=window.session||{km:15,options:'Nenhum adicional'};
+ const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+ content.innerHTML=`<div class="hero"><div class="heroicon">✓</div><h2>Resultado do frete</h2><div class="muted">Cálculo conforme a tabela informada pela GJ Entregas.</div></div><div class="resultbox"><div class="overline">VALOR TOTAL</div><h2>${money(s.total||0)}</h2><p style="text-align:center">Distância: ${s.km} km</p></div><div class="notice"><strong>Detalhamento</strong><p>Valor-base: ${money(s.base||0)}<br>Nota fiscal: ${money(s.adicionalNota||0)}<br>Adicional de peso: ${money(s.adicionalPeso||0)}<br>Adicional de tamanho: ${money(s.adicionalGrande||0)}</p></div><div class="notice"><strong>Adicionais selecionados</strong><p>${s.options}</p></div><button class="btn" id="again">↻ &nbsp; Nova simulação</button><div class="fine">Confirme com o responsável se os adicionais por kg/km são aplicados sobre toda a distância percorrida.</div>`;
+ document.getElementById('again').onclick=()=>{historyItems.unshift(s);screen='home';render()};
+ }else if(screen==='history'){
+ content.innerHTML=`<h2>Histórico de cálculos</h2><p class="muted">Simulações desta sessão.</p>${historyItems.length?historyItems.map(x=>`<div class="historyitem"><strong>⌖ ${x.km} km</strong><span class="muted">${x.options}</span></div>`).join(''):`<div class="hero"><div class="heroicon">◷</div><div class="muted">Suas simulações aparecerão aqui quando você finalizar uma simulação.</div></div>`}`;
+ }else{
+ content.innerHTML=`<div class="hero"><div class="heroicon">🚚</div><h2>Sobre a GJ Entregas</h2><div class="muted">Entregas rápidas e seguras. Uma interface criada para facilitar a simulação de fretes por distância e características da carga.</div></div><hr class="line"><div class="check">⚡ &nbsp; Praticidade</div><div class="check">🛡️ &nbsp; Confiança</div><div class="check">⌖ &nbsp; Entregas por distância</div>`;
+ }
+}
+let session={km:15,options:'Nenhum adicional',base:30,adicionalNota:0,adicionalPeso:0,adicionalGrande:0,total:30};
+document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>{screen=b.dataset.screen;menu.classList.remove('open');render()}));
+document.getElementById('menuBtn').addEventListener('click',()=>menu.classList.toggle('open'));
+render();
+</script>
+</body>
+</html>
